@@ -19,14 +19,41 @@
       notStrictEqual(actual, expected, [message])
       throws(block, [expected], [message])
   */
-
-  module('jQuery#mccccc', {
+	var collection = new Collection('message_test');
+	
+	collection.use_websql();
+	
+	
+	
+  module('Collection#WebSQL', {
     // This will run before each test in this module.
     setup: function() {
       this.elems = $('#qunit-fixture').children();
+			
     }
   });
 
+  test('is collection.content_arr length = 1', function() {
+    expect(1);
+		
+		var obj = {
+			type :'type',
+			mid :'mid',
+			uid :'uid',
+			uname :'uname',
+			avatar :'avatar',
+			sid :'sid',
+			sname:'sname',
+			timestamp :'timestamp',
+			msg :'msg'
+		}
+		// ok
+		collection.add(obj);
+		
+    // Not a bad test to run on collection methods.
+    equal(collection.content_arr.length, 1, 'add a obj,collection.content_arr length should be 1');
+  });
+	
   // test('is chainable', function() {
   //   // expect(1);
   //   // Not a bad test to run on collection methods.
