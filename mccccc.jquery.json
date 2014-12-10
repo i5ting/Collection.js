@@ -1,0 +1,26 @@
+{
+  "name": "mccccc",
+  "title": "Mccccc",
+  "description": "The best jQuery plugin ever.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/sang/mccccc",
+  "author": {
+    "name": "alfred sang",
+    "email": "i5ting@126.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sang/mccccc.git"
+  },
+  "bugs": "https://github.com/sang/mccccc/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/sang/mccccc/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
