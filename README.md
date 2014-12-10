@@ -118,3 +118,6 @@ http://html5test.com/compare/feature/storage-localStorage/storage-sqlDatabase/st
 	
 </script>
 ```
+
+
+- https://github.com/sudhirj/simply-deferred

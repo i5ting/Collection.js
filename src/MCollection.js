@@ -168,7 +168,10 @@ Class('WebSQLStore', storageBase, {
 {
 	key_arr :[],
 	val_arr :[],
+	//返回 "type string, mid string"
 	k_v_pair_arr :[],
+	// a = '1',b=2
+	k_v_equal_arr :[],
 	is_set_table_meta_flag:false,
 	get_websql_db:function(){
 		return openDatabase('db_ichat', '1.0', 'DB of im', 2 * 1024 * 1024); 
@@ -267,6 +270,8 @@ Class('WebSQLStore', storageBase, {
 		var k_v_pair_arr = [];
 		var key_arr = [];
 		var val_arr = [];
+		var k_v_equal_arr = [];
+			
 		
 		for(var attr in obj){
 			var value = obj[attr];
@@ -275,12 +280,16 @@ Class('WebSQLStore', storageBase, {
 			key_arr.push(this.get_string(attr));
 			val_arr.push(this.get_string(value));
 			k_v_pair_arr.push(str);
+			
+			var str2 = attr + '=' +  this.get_string(value)
+			k_v_equal_arr.push(str2);
 		}
 		//['type','mid','uid','uname','avatar','sid','sname','timestamp','cuid','msg']
 		this.key_arr = key_arr;
 		this.val_arr = val_arr;
 		
 		this.k_v_pair_arr = k_v_pair_arr;
+		this.k_v_equal_arr = k_v_equal_arr;
 		
 		this.is_set_table_meta_flag = true
 	},
@@ -300,6 +309,9 @@ Class('WebSQLStore', storageBase, {
 		}
 	},
 	_save:function(obj){
+		if(this._is_record_exist() == true)
+			return;
+		
 		this.set_table_meta(obj);
 		var attr_str = this.key_arr.join(",");
 		var values_str = this.val_arr.join(",");
@@ -307,6 +319,15 @@ Class('WebSQLStore', storageBase, {
 		var sql = "insert into " + this.key + " (" + attr_str + ") values(" + values_str + ")";
 
 		this.exec_sql(sql);
+	},
+	_is_record_exist:function(){
+		var where_condition = this.k_v_equal_arr.join(" and ");
+		var sql= "select count(*) from " + this.key + " where " + where_condition;
+		//this.exec_sql(sql);
+		this.exec_sql_with_result(sql, function(data){
+			this.log(data);
+			return data;
+		});
 	},
 	_is_table_exist:function(table_name){
 		return false;

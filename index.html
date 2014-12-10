@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>[单人]</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="./lib/css/ratchet.min.css">
+    <link rel="stylesheet" href="./lib/css/ratchet-theme-ios.min.css">
+    <link rel="stylesheet" href="css/app.css">
+	  <link rel="stylesheet" href="css/chat.css">
+
+		<script src="./libs/miniobj.min.js"></script>
+		<script src="./libs/deferred.min.js"></script>
+		<script src="./src/MCollection.js"></script>
+		<script>
+			//清楚所有缓存
+			LocalStore.clear();
+			
+			var collection = new Collection('message_test');
+			
+			collection.use_websql();
+			
+			var obj = {
+				type :'type',
+				mid :'mid',
+				uid :'uid',
+				uname :'uname',
+				avatar :'avatar',
+				sid :'sid',
+				sname:'sname',
+				timestamp :'timestamp',
+				msg :'msg'
+			}
+			// ok
+			collection.add(obj);
+			// ok
+			collection.save();
+			
+			
+			var arr = collection.all();
+			
+			console.log(arr);
+			
+			var m = collection.get(0);
+			console.log(m.type);
+			
+			
+			// collection.drop();
+			
+		 	// var saved_obj = collection.save(obj);
+			//
+			// 	var myobj = collection.get(saved_obj.id);
+			//
+			// 	var arr = collection.all();
+			
+			
+			
+		</script>
+  </head>
+  <body>
+		
+  </body>
+</html>
