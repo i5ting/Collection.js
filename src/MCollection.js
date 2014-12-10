@@ -348,10 +348,15 @@ Class('WebSQLStore', storageBase, {
 		// this.fetch_all();
 	},
 	get_array:function(){
-		this.log('暂时未实现');
+		var sql = "select * from " + this.key;
+			
+		this.exec_sql_with_result(sql, function(data){
+			return data;
+		});
+		// this.log('暂时未实现');
 	},
 	all:function(){
-		this.log('暂时未实现');
+		return this.get_array();
 	},
 	get:function(index){
 		this.log('暂时未实现');
