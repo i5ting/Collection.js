@@ -309,23 +309,22 @@ Class('WebSQLStore', storageBase, {
 		}
 	},
 	_save:function(obj){
-		if(this._is_record_exist() == true)
-			return;
+		this._is_record_exist(function(){
+			this.set_table_meta(obj);
+			var attr_str = this.key_arr.join(",");
+			var values_str = this.val_arr.join(",");
 		
-		this.set_table_meta(obj);
-		var attr_str = this.key_arr.join(",");
-		var values_str = this.val_arr.join(",");
-		
-		var sql = "insert into " + this.key + " (" + attr_str + ") values(" + values_str + ")";
+			var sql = "insert into " + this.key + " (" + attr_str + ") values(" + values_str + ")";
 
-		this.exec_sql(sql);
+			this.exec_sql(sql);
+		});	
 	},
-	_is_record_exist:function(){
+	_is_record_exist:function(cb){
 		var where_condition = this.k_v_equal_arr.join(" and ");
 		var sql= "select count(*) from " + this.key + " where " + where_condition;
 		//this.exec_sql(sql);
 		this.exec_sql_with_result(sql, function(data){
-			this.log(data);
+			cb(data);
 			return data;
 		});
 	},
@@ -344,7 +343,7 @@ Class('WebSQLStore', storageBase, {
 		this._table_exist = this._is_table_exist(key) ? true : false;
 	},
 	check_if_not_support:function(){
-		this.log('暂时未实现' + window.openDatabase);
+		//this.log('暂时未实现' + window.openDatabase);
 		return !window.openDatabase;
 	},
 	add_if:function(obj){
@@ -368,16 +367,17 @@ Class('WebSQLStore', storageBase, {
 		} 
 		// this.fetch_all();
 	},
-	get_array:function(){
+	get_array:function(cb){
 		var sql = "select * from " + this.key;
 			
 		this.exec_sql_with_result(sql, function(data){
-			return data;
+			cb(data);
+			// return data;
 		});
 		// this.log('暂时未实现');
 	},
-	all:function(){
-		return this.get_array();
+	all:function(cb){
+		return this.get_array(cb);
 	},
 	get:function(index){
 		this.log('暂时未实现');
