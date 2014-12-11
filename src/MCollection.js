@@ -309,23 +309,39 @@ Class('WebSQLStore', storageBase, {
 		}
 	},
 	_save:function(obj){
-		this._is_record_exist(function(){
-			this.set_table_meta(obj);
-			var attr_str = this.key_arr.join(",");
-			var values_str = this.val_arr.join(",");
+		var _instance = this;
+		this._is_record_exist(obj,function(){
+			// cb_exist
+			this.log("该记录已经存在，不需要插入");
+		},function(){
+			// cb_not_exist
+			this.log("该记录不存在，准备保存");
+			var attr_str = _instance.key_arr.join(",");
+			var values_str = _instance.val_arr.join(",");
 		
-			var sql = "insert into " + this.key + " (" + attr_str + ") values(" + values_str + ")";
+			var sql = "insert into " + _instance.key + " (" + attr_str + ") values(" + values_str + ")";
 
-			this.exec_sql(sql);
+			_instance.exec_sql(sql);
+			this.log("该记录保存完成");
 		});	
 	},
-	_is_record_exist:function(cb){
+	_is_record_exist:function(obj, cb_exist, cb_not_exist){
+		this.set_table_meta(obj);
+		this._get_record_count(obj,function(count){
+			if(count > 0){
+				cb_exist();
+			}else{
+				cb_not_exist();
+			}
+		});
+	},
+	_get_record_count:function(obj, cb){
+		this.set_table_meta(obj);
 		var where_condition = this.k_v_equal_arr.join(" and ");
-		var sql= "select count(*) from " + this.key + " where " + where_condition;
+		var sql= "select count(0) as count from " + this.key + " where " + where_condition;
 		//this.exec_sql(sql);
 		this.exec_sql_with_result(sql, function(data){
-			cb(data);
-			return data;
+			cb(data[0].count);
 		});
 	},
 	_is_table_exist:function(table_name){
@@ -369,7 +385,6 @@ Class('WebSQLStore', storageBase, {
 	},
 	get_array:function(cb){
 		var sql = "select * from " + this.key;
-			
 		this.exec_sql_with_result(sql, function(data){
 			cb(data);
 			// return data;
