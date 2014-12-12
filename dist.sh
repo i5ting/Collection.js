@@ -1,4 +1,5 @@
 #! /bin/bash
 
-npm install
+# npm install
 grunt clean && grunt concat && grunt uglify
+./ichat.sh
