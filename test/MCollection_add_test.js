@@ -8,7 +8,7 @@
     }
   });
 
-  test('is collection.content_arr length = 1', function() {
+  test('alfter add() collection.content_arr length = 1', function() {
     expect(1);
 		
 		var collection = new Collection('message_test');

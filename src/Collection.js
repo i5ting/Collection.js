@@ -317,10 +317,16 @@ Class('WebSQLStore', storageBase, {
 		}
 	},
 	_save:function(obj){
+		this._save_with(obj);
+	},
+	_save_with:function(obj, cb_succ, cb_fail){
 		var _instance = this;
 		this._is_record_exist(obj,function(){
 			// cb_exist
 			this.log("该记录已经存在，不需要插入");
+			if(cb_succ){
+				cb_succ();
+			}
 		},function(){
 			// cb_not_exist
 			this.log("该记录不存在，准备保存");
@@ -328,8 +334,17 @@ Class('WebSQLStore', storageBase, {
 			var values_str = _instance.val_arr.join(",");
 		
 			var sql = "insert into " + _instance.key + " (" + attr_str + ") values(" + values_str + ")";
-
-			_instance.exec_sql(sql);
+			
+			if(cb_succ && cb_fail){
+				_instance.exec_sql(sql, cb_succ ,cb_fail);
+			}else if(cb_succ){
+				_instance.exec_sql(sql, cb_succ ,function(){
+					console.log('cb_succ函数存在，但保存失败');
+				});
+			}else{
+				_instance.exec_sql(sql);
+			}
+			
 			this.log("该记录保存完成");
 		});	
 	},
@@ -395,13 +410,43 @@ Class('WebSQLStore', storageBase, {
 		
 		this.content_arr.push(obj);
 	},
-	save:function(){
+	save:function(cb_succ, cb_fail){
+		
+		if(cb_succ && cb_fail){
+			this.save_array(cb_succ, cb_fail);
+			return;
+		}
+		
+		if(cb_succ){
+			this.save_array(cb_succ);
+			return;
+		}
+		
+		// default 
 		this.save_array();
 	},
-	save_array:function(){
+	save_array:function(cb_succ, cb_fail){
+		if(this.content_arr.length == 0 ){
+			this.log("当前没有需要保存的内容");
+			cb_succ();
+			return;
+		}
 		for(var i in this.content_arr){
 			var obj = this.content_arr[i];
-			this._save(obj);
+			
+			if(i == (this.content_arr.length - 1)){
+				this._save_with(obj, function(){
+					// succ
+					if(cb_succ)
+						cb_succ();
+				},function(){
+					// fail
+					if(cb_fail)
+						cb_fail();
+				});
+			}else{
+				this._save(obj);
+			}
 		} 
 		// this.fetch_all();
 	},
@@ -428,7 +473,8 @@ Class('WebSQLStore', storageBase, {
 			if(is_exist == true){
 				_instance.exec_sql(sql);
 			}
-			succ_cb();
+			if(succ_cb)
+				succ_cb();
 		});
 		
 	},
