@@ -31,7 +31,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/mobile.Collection.min.js'
+        dest: 'dist/Collection.min.js'
       },
     },
     qunit: {
