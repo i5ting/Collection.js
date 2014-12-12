@@ -451,9 +451,16 @@ Class('WebSQLStore', storageBase, {
 		// this.fetch_all();
 	},
 	get_array:function(cb){
+		if(cb){
+			cb(this.content_arr);
+		}
+		return this.content_arr;
+	},
+	load_all:function(cb){
 		var sql = "select * from " + this.key;
 		this.exec_sql_with_result(sql, function(data){
-			cb(data);
+			if(cb)
+				cb(data);
 			// return data;
 		});
 		// this.log('暂时未实现');

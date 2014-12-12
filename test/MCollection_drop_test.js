@@ -26,15 +26,13 @@
 			}
 			// ok
 			collection.add(obj);
-			collection.save();
-			
-			setTimeout(function(){
+			collection.save(function(){
 				collection.is_exist(function(is_exist){
 					// alert(is_exist);
 					ok(is_exist == true, "save之后，应该建表，并有一条记录的。");
 					start();
 				});
-			},200);
+			});
 		
   });
 	
@@ -67,8 +65,6 @@
 					start();
 				});
 			});
-
-  	
   });
 	
 }(jQuery));
