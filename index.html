@@ -18,11 +18,13 @@
 			});
 									//
 			// //清楚所有缓存
-			LocalStore.clear();
+			// LocalStore.clear();
 
 			var collection = new Collection('message_test');
 
-			collection.use_websql();
+			// collection.use_websql();
+			
+			// collection.drop();
 
 			var obj = {
 				type :'type',
@@ -46,7 +48,7 @@
 			console.log(arr);
 
 			var m = collection.get(0);
-			// console.log(m.type);
+			console.log(m.type);
 			//
 			
 			// collection.drop();
