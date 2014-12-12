@@ -422,9 +422,15 @@ Class('WebSQLStore', storageBase, {
 	drop:function(succ_cb){
 		this.log('执行drop table '+this.key+'');
 		var sql = "drop table " + this.key + ";";
-		this.exec_sql(sql, succ_cb, function(){
-			console.log("drop table 失败");
+		
+		var _instance = this;
+		this.is_exist(function(is_exist){
+			if(is_exist == true){
+				_instance.exec_sql(sql);
+			}
+			succ_cb();
 		});
+		
 	},
 	is_exist:function(cb){
 		this._is_table_exist(function(data){

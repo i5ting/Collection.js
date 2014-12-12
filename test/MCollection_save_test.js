@@ -30,17 +30,14 @@
 		collection.add(obj);
 		collection.save();
 
-		collection.is_exist(function(is_exist){
-			// alert(is_exist);
-			ok(is_exist == true, "save之后，应该建表，并有一条记录的。");
-			start();
-		});
+		setTimeout(function(){
+			collection.is_exist(function(is_exist){
+				// alert(is_exist);
+				ok(is_exist == true, "save之后，应该建表，并有一条记录的。");
+				start();
+			});
+		},200);
 		
-		// collection.all(function(data){
-	//
-	// 		ok(data.length == 1,"only one record")
-	// 		start();
-	// 	});
   });
 	
 }(jQuery));
