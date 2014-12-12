@@ -70,6 +70,13 @@ Class('StorageBase',{
 	},
 	drop:function(){
 		this.log('暂时未实现');
+	},
+	search:function(){
+		this.log('暂时未实现');
+	},
+	//清空内容，如果是websql就delete所有，如果是localstorage就设置key为空
+	empty:function(){
+		this.log('暂时未实现');
 	}
 });
 
@@ -117,6 +124,9 @@ Class('LocalStore', storageBase, {
 	drop:function(){
 		store.remove(this.key)
 	},
+	empty:function(){
+		this.store.set(this.key, '');
+	},
 	check_if_exist:function(){
     //TODO:
     return true;
@@ -141,6 +151,9 @@ Class('LocalStore', storageBase, {
 	},
 	_add_force:function(obj){
 		this.content_arr.push(obj);
+	},
+	search:function(){
+		this.log('暂时未实现');
 	}
 });
 
@@ -385,6 +398,8 @@ Class('WebSQLStore', storageBase, {
 }, 
 {
 	constructor:function(key){
+		this.key = key;
+		
 		if(this.check_if_not_support() == true){
 		  alert('WebSQLStore is not supported by your browser.')
 			return;
@@ -395,7 +410,6 @@ Class('WebSQLStore', storageBase, {
 			_instance._table_exist = is_exist;
 		});
 		
-		this.key = key;
 	},
 	check_if_not_support:function(){
 		//this.log('暂时未实现' + window.openDatabase);
@@ -485,6 +499,11 @@ Class('WebSQLStore', storageBase, {
 		});
 		
 	},
+	empty:function(){
+		this.log('empty table '+this.key+'');
+		var sql = "delete from table " + this.key + ";";
+		this.exec_sql(sql);
+	},
 	is_exist:function(cb){
 		this._is_table_exist(function(data){
 			if(data == 1){
@@ -493,6 +512,31 @@ Class('WebSQLStore', storageBase, {
 				cb(false);
 			}
 		});
+	},
+	search:function(obj, cb){
+		var _instance = this;
+		 
+			// get table meta info 
+		
+			// verify attr in meta
+		
+			// sql builder
+			var kv_arr = [];
+			for(var attr in obj){
+				var str ="'"+ attr + "'='" + obj[attr]+"'";
+				kv_arr.push(str); 
+			}
+		
+			var where_condition = kv_arr.join(" and ");
+		
+			// search sql
+			var sql = "select * from " + this.key + " where " + where_condition;
+			_instance.exec_sql_with_result(sql, function(data){
+				if(cb)
+					cb(data);
+				// return data;
+			});
+		 
 	}
 });
 
@@ -580,4 +624,6 @@ Class('Collection',{
 		}
 		
 	}
+	
+	
 });
