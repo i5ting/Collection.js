@@ -469,7 +469,7 @@ Class('WebSQLStore', storageBase, {
 		return this.get_array(cb);
 	},
 	get:function(index){
-		this.log('暂时未实现');
+		return this.content_arr[index];
 	},
 	drop:function(succ_cb){
 		this.log('执行drop table '+this.key+'');
