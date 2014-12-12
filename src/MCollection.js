@@ -228,14 +228,22 @@ Class('WebSQLStore', storageBase, {
 		}
 	},
 	_create_table:function(obj){
-		var table_name = this.key;
-		var table_meta = this._get_table_meta(obj);
-		var sql = 'CREATE TABLE IF NOT EXISTS ' + table_name + ' ('
-			+'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-			+ table_meta
-			+')';
-		this.exec_sql(sql);
-		this._table_exist = true;
+		
+		var _instance = this;
+		this.is_exist(function(is_exist){
+			_instance._table_exist = is_exist;
+			
+			if(is_exist == false){
+				var table_name = _instance.key;
+				var table_meta = _instance._get_table_meta(obj);
+				var sql = 'CREATE TABLE IF NOT EXISTS ' + table_name + ' ('
+					+'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+					+ table_meta
+					+')';
+				_instance.exec_sql(sql);
+				_instance._table_exist = true;
+			}
+		});
 	},
 	// typeof 运算符把类型信息当作字符串返回。typeof 返回值有六种可能：
 	// "number," "string," "boolean," "object," "function," 和 "undefined."
@@ -305,7 +313,7 @@ Class('WebSQLStore', storageBase, {
 			// 设置当前表的元信息
 			this._set_table_meta(obj);
 		}else{
-			this.log("当前表已经设置过meta信息了，不需要重复设置");
+			this.log("当前表已经设置过meta信息了，或者，表就不存在");
 		}
 	},
 	_save:function(obj){
@@ -344,10 +352,21 @@ Class('WebSQLStore', storageBase, {
 			cb(data[0].count);
 		});
 	},
-	_is_table_exist:function(table_name){
-		return false;
-		var sql= "select count(*) from sqlite_master where type='table' and name='" + table_name + "'";
+	_is_table_exist:function(callback){
+		var sql= "select count(0) as count from sqlite_master where type='table' and name='" + this.key + "'";
+		//this.exec_sql(sql);
+		this.exec_sql_with_result(sql, function(data){
+			callback(data[0].count);
+		});
+	},
+	_get_all_table_names:function(callback){
+		var sql= "select * from sqlite_master where type='table'";
+		//this.exec_sql(sql);
+		this.exec_sql_with_result(sql, function(data){
+			callback(data);
+		});
 	}
+	
 }, 
 {
 	constructor:function(key){
@@ -356,7 +375,12 @@ Class('WebSQLStore', storageBase, {
 			return;
 		}
 		
-		this._table_exist = this._is_table_exist(key) ? true : false;
+		var _instance = this;
+		this.is_exist(function(is_exist){
+			_instance._table_exist = is_exist;
+		});
+		
+		this.key = key;
 	},
 	check_if_not_support:function(){
 		//this.log('暂时未实现' + window.openDatabase);
@@ -367,9 +391,7 @@ Class('WebSQLStore', storageBase, {
 		this.log('暂时未实现');
 	},
 	add:function(obj){
-		if(this._table_exist == false){
-			this._create_table(obj);
-		}
+		this._create_table(obj);
 		
 		this.content_arr.push(obj);
 	},
@@ -397,10 +419,22 @@ Class('WebSQLStore', storageBase, {
 	get:function(index){
 		this.log('暂时未实现');
 	},
-	drop:function(){
-		this.log('暂时未实现');
+	drop:function(succ_cb){
+		this.log('执行drop table '+this.key+'');
+		var sql = "drop table " + this.key + ";";
+		this.exec_sql(sql, succ_cb, function(){
+			console.log("drop table 失败");
+		});
+	},
+	is_exist:function(cb){
+		this._is_table_exist(function(data){
+			if(data == 1){
+				cb(true);
+			}else{
+				cb(false);
+			}
+		});
 	}
-
 });
 
 

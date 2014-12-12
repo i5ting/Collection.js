@@ -11,7 +11,10 @@
 	<script src="../libs/miniobj.min.js"></script>
   <!-- Load local lib and tests. -->
   <script src="../src/MCollection.js"></script>
-  <script src="MCollection_test.js"></script>
+  <script src="MCollection_add_test.js"></script>
+	<script src="MCollection_save_test.js"></script>
+	<script src="MCollection_drop_test.js"></script>
+	
   <!-- Removing access to jQuery and $. But it'll still be available as _$, if
        you REALLY want to mess around with jQuery in the console. REMEMBER WE
        ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
@@ -26,3 +29,25 @@
   </div>
 </body>
 </html>
+<!--
+  /*
+    ======== A Handy Little QUnit Reference ========
+    http://api.qunitjs.com/
+
+    Test methods:
+      module(name, {[setup][ ,teardown]})
+      test(name, callback)
+      expect(numberOfAssertions)
+      stop(increment)
+      start(decrement)
+    Test assertions:
+      ok(value, [message])
+      equal(actual, expected, [message])
+      notEqual(actual, expected, [message])
+      deepEqual(actual, expected, [message])
+      notDeepEqual(actual, expected, [message])
+      strictEqual(actual, expected, [message])
+      notStrictEqual(actual, expected, [message])
+      throws(block, [expected], [message])
+  */
+-->
