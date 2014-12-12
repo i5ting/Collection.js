@@ -1,5 +1,5 @@
 /*! Collection - v0.1.0 - 2014-12-12
-* https://github.com/sang/mccccc
+* https://github.com/i5ting/Collection.js
 * Copyright (c) 2014 alfred sang; Licensed MIT */
 // use https://github.com/marcuswestin/store.js
 // 最核心的想法，
