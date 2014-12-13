@@ -14,7 +14,7 @@
   		var collection = new Collection('message_test');
    	 	collection.use_websql();
 			
-			// collection.drop();
+			collection.empty();
 
 			var obj = {
 				type :'type',
@@ -45,15 +45,14 @@
 			
 			// ok
 			collection.save(function(){
-				
+				console.log(1);
 			});
 		
 			// setTimeout(function(){
-			// 	collection.all(function(data){
-			// 		// alert(is_exist);
-			// 		ok(data.length == 2, "data array length should be 2");
-			// 		start();
-			// 	});
+				collection.all(function(data){
+					// alert(is_exist);
+					console.log('data = '  + data);
+				});
 			// },200);
 			//
 					
@@ -67,7 +66,7 @@
 					start();
 					// collection.drop();
 				});
-			},1200);
+			},200);
 			
   });
 	

@@ -334,6 +334,18 @@ Class('WebSQLStore', storageBase, {
 	},
 	_save_with:function(obj, cb_succ, cb_fail){
 		var _instance = this;
+		
+		var key_arr = [];
+		var val_arr = [];
+		for(var attr in obj){
+			var value = obj[attr];
+			key_arr.push(this.get_string(attr));
+			val_arr.push(this.get_string(value));
+		}
+		
+		var attr_str = key_arr.join(",");
+		var values_str = val_arr.join(",");
+		
 		this._is_record_exist(obj,function(){
 			// cb_exist
 			this.log("该记录已经存在，不需要插入");
@@ -343,8 +355,6 @@ Class('WebSQLStore', storageBase, {
 		},function(){
 			// cb_not_exist
 			this.log("该记录不存在，准备保存");
-			var attr_str = _instance.key_arr.join(",");
-			var values_str = _instance.val_arr.join(",");
 		
 			var sql = "insert into " + _instance.key + " (" + attr_str + ") values(" + values_str + ")";
 			
@@ -494,6 +504,7 @@ Class('WebSQLStore', storageBase, {
 			if(is_exist == true){
 				_instance.exec_sql(sql);
 			}
+			_instance._table_exist = false;
 			if(succ_cb)
 				succ_cb();
 		});
@@ -501,7 +512,7 @@ Class('WebSQLStore', storageBase, {
 	},
 	empty:function(){
 		this.log('empty table '+this.key+'');
-		var sql = "delete from table " + this.key + ";";
+		var sql = "delete from " + this.key + ";";
 		this.exec_sql(sql);
 	},
 	is_exist:function(cb){
@@ -516,27 +527,27 @@ Class('WebSQLStore', storageBase, {
 	search:function(obj, cb){
 		var _instance = this;
 		 
-			// get table meta info 
-		
-			// verify attr in meta
-		
-			// sql builder
-			var kv_arr = [];
-			for(var attr in obj){
-				var str ="'"+ attr + "'='" + obj[attr]+"'";
-				kv_arr.push(str); 
-			}
-		
-			var where_condition = kv_arr.join(" and ");
-		
-			// search sql
-			var sql = "select * from " + this.key + " where " + where_condition;
-			_instance.exec_sql_with_result(sql, function(data){
-				if(cb)
-					cb(data);
-				// return data;
-			});
-		 
+		// get table meta info 
+	
+		// verify attr in meta
+	
+		// sql builder
+		var kv_arr = [];
+		for(var attr in obj){
+			var str ="'"+ attr + "'='" + obj[attr]+"'";
+			kv_arr.push(str); 
+		}
+	
+		var where_condition = kv_arr.join(" and ");
+	
+		// search sql
+		var sql = "select * from " + this.key + " where " + where_condition;
+		_instance.exec_sql_with_result(sql, function(data){
+			if(cb)
+				cb(data);
+			// return data;
+		});
+	 
 	}
 });
 
