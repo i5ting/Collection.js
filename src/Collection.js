@@ -111,6 +111,7 @@ Class('LocalStore', storageBase, {
 	},
 	get_array:function(){
 		var contents = JSON.parse(store.get(this.key));
+		this.content_arr = contents;
 		return contents;
 	},
 	all:function(){
@@ -129,10 +130,6 @@ Class('LocalStore', storageBase, {
 	},
 	empty:function(){
 		this.store.set(this.key, '');
-	},
-	check_if_exist:function(){
-    //TODO:
-    return true;
 	},
 	add_if:function(obj){
 	  //如果使用此方法，就是要检测是否已存在的。

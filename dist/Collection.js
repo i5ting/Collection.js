@@ -158,6 +158,11 @@ Class('LocalStore', storageBase, {
 	_add_force:function(obj){
 		this.content_arr.push(obj);
 	},
+	check_if_exist:function(){
+		//TODO:
+		this.log('暂时未实现');
+		return false;
+	},
 	_is_empty:function(){
 		var c = this.all().length;
 		return (c == 0) ? true : false;
