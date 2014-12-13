@@ -14,6 +14,8 @@
 		var collection = new Collection('message_test');
 		// collection.drop();
 		// collection.use_websql();
+		collection.empty();
+		
 		var obj = {
 			type :'type',
 			mid :'mid',

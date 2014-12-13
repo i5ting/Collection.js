@@ -56,16 +56,16 @@ Class('StorageBase',{
 	add:function(obj){
 		this.log('暂时未实现');
 	},
-	save:function(){
+	save:function(cb_succ, cb_fail){
 		this.log('暂时未实现');
 	},
 	save_array:function(){
 		this.log('暂时未实现');
 	},
-	get_array:function(){
+	get_array:function(cb){
 		this.log('暂时未实现');
 	},
-	all:function(){
+	all:function(cb){
 		this.log('暂时未实现');
 	},
 	get:function(index){
@@ -92,6 +92,9 @@ Class('LocalStore', storageBase, {
 			return;
 		}
 		this.store = store;
+		
+		// init this.content_arr
+		this.get_array();
 	},
 	debug:true,
 	log:function(t){
@@ -106,16 +109,22 @@ Class('LocalStore', storageBase, {
 		return !store.enabled;
 	},
 	save_array:function(){
+		// this.get_array();
 		var contents = JSON.stringify(this.content_arr);
 		this.store.set(this.key, contents);
 	},
-	get_array:function(){
+	get_array:function(cb){
+		if(store.get(this.key) == undefined || store.get(this.key) == ""){
+			this.store.set(this.key, '[]');
+			this.content_arr = [];
+			return [];
+		}
 		var contents = JSON.parse(store.get(this.key));
 		this.content_arr = contents;
 		return contents;
 	},
-	all:function(){
-		return this.get_array();
+	all:function(cb){
+		return this.get_array(cb);
 	},
 	get:function(index){
 		var contents = this.get_array();
@@ -129,7 +138,7 @@ Class('LocalStore', storageBase, {
 		store.remove(this.key)
 	},
 	empty:function(){
-		this.store.set(this.key, '');
+		this.store.set(this.key, '[]');
 	},
 	add_if:function(obj){
 	  //如果使用此方法，就是要检测是否已存在的。
@@ -138,7 +147,7 @@ Class('LocalStore', storageBase, {
 	add:function(obj){
 	  this._add_force(obj);
 	},
-	save:function(){
+	save:function(cb_succ, cb_fail){
 	  this.save_array();
 	},
 	_add:function(obj){
