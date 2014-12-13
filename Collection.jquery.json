@@ -2,7 +2,7 @@
   "name": "Collection",
   "title": "Collection",
   "description": "a data access object wrapper for all mobile platform",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/i5ting/Collection.js",
   "author": {
     "name": "alfred sang",
