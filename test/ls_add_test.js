@@ -8,7 +8,7 @@
     }
   });
 
-  test('alfter add() collection.content_arr length = 1', function() {
+  asyncTest('alfter add() collection.content_arr length = 1', function() {
     expect(1);
 		
 		var collection = new Collection('message_test');
@@ -33,9 +33,14 @@
 		
 		collection.save();
 		
-		var content_arr = collection.all();
+		setTimeout(function(){
+			var content_arr = collection.all();
+			
+			equal(content_arr.length, 2, 'add a obj,collection.content_arr length should be 2');
+			start();
+		},200);
     // Not a bad test to run on collection methods.
-    equal(collection.content_arr.length, 2, 'add a obj,collection.content_arr length should be 2');
+    
   });
 	
 }(jQuery));

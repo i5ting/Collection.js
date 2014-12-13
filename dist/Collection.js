@@ -147,6 +147,7 @@ Class('LocalStore', storageBase, {
 	  this._add(obj);
 	},
 	add:function(obj){
+		this.content_arr = this.all();
 	  this._add_force(obj);
 	},
 	save:function(cb_succ, cb_fail){
