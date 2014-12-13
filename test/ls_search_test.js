@@ -80,7 +80,7 @@
 			}
 		
 			var obj1 = {
-				type :'type 1',
+				type :'s 1',
 				mid :'mid 1',
 				uid :'uid 1',
 				uname :'uname',

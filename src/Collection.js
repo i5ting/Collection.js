@@ -159,62 +159,53 @@ Class('LocalStore', storageBase, {
 		var c = this.all().length;
 		return (c == 0) ? true : false;
 	},
-	search:function(obj, cb){
-		
-		var _instance = this;
-		
-		if(this._is_empty() == true){
-			this.log('数据为空，不需要搜索。');
-			return;
-		}
-		 
-		var contents = this.all();
-		
-		var fields = [];
-		
+	search:function(obj,cb){
 		var defaults_config = {
 			field: 'name', 
 			direction: 'asc'
 		}
-		
+
 		var result  = '';
 		function get_search_result(contents, one_field, field_search_content, limit){
-	 	  // 缓存，不能每次搜索都创建这么大得对象。
+		  // 缓存，不能每次搜索都创建这么大得对象。
 			this.sifter = new Sifter(contents);
-		
+
 			result = this.sifter.search('' + field_search_content, {
 			  fields: [one_field],
 			  sort: [{field: 'id', direction: 'asc'}],
 				limit: limit
 			});
-			
+			console.log('start---------------------------\n'+result.items);
 			return get_contents_arr(result);
 		};
 		
+		var contacts_array = this.all();
+
 		function get_contents_arr(search_content){
 			var result = search_content
 			var arr = [];
 			for(var i in result.items){
 				var cid = result.items[i]['id']
-				var contact = this.contacts_array[cid];
+				var contact = contacts_array[cid];
 				arr.push(contact);
 			}
+			console.log(arr);
 			return arr
 		}
 		// obj有几个对象就要处理几次，不然无法实现and操作的。因地制宜
-		
+
 		var result_arr = [];
-		
+
+		var contents = this.all();
+
 		for(var attr in obj){
-			var contents = this.all();
 			var one_field = attr;
 			var field_search_content = obj[attr];
-			var limit = this.contents.length();
-			get_search_result(contents, one_field, field_search_content, limit)；
+			var limit = contents.length;
+			contents = get_search_result(contents, one_field, field_search_content, limit);
 		}
-
-		
-		cb(result);
+	
+		cb(contents);
 	}
 });
 
