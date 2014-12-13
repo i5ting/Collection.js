@@ -172,33 +172,48 @@ Class('LocalStore', storageBase, {
 		
 		var fields = [];
 		
-		var defaults = {
+		var defaults_config = {
 			field: 'name', 
 			direction: 'asc'
 		}
 		
 		var result  = '';
-		function get_search_result(){
+		function get_search_result(contents, one_field, field_search_content, limit){
 	 	  // 缓存，不能每次搜索都创建这么大得对象。
 			this.sifter = new Sifter(contents);
 		
-			result = this.sifter.search('' + search_content, {
-			  fields: ['group_id','group_name','uid','name','avatar','address','cuid'],
-			  sort: [{field: 'name', direction: 'asc'}],
-				limit: 100
+			result = this.sifter.search('' + field_search_content, {
+			  fields: [one_field],
+			  sort: [{field: 'id', direction: 'asc'}],
+				limit: limit
 			});
+			
+			return get_contents_arr(result);
 		};
+		
+		function get_contents_arr(search_content){
+			var result = search_content
+			var arr = [];
+			for(var i in result.items){
+				var cid = result.items[i]['id']
+				var contact = this.contacts_array[cid];
+				arr.push(contact);
+			}
+			return arr
+		}
 		// obj有几个对象就要处理几次，不然无法实现and操作的。因地制宜
 		
- 	
-		ichat_config.log('contact search_content = ' + search_content);
-
-
+		var result_arr = [];
+		
 		for(var attr in obj){
-			 get_search_result();
+			var contents = this.all();
+			var one_field = attr;
+			var field_search_content = obj[attr];
+			var limit = this.contents.length();
+			get_search_result(contents, one_field, field_search_content, limit)；
 		}
 
-	
+		
 		cb(result);
 	}
 });
@@ -596,7 +611,6 @@ Class('WebSQLStore', storageBase, {
 				cb(data);
 			// return data;
 		});
-	 
 	}
 });
 

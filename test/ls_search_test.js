@@ -11,9 +11,7 @@
   asyncTest('all default will return 2 result' ,function() {
   		expect(1);
 
-  		var collection = new Collection('message_test');
-   	 	collection.use_websql();
-			
+  		var collection = new Collection('message_test');			
 			collection.empty();
 
 			var obj = {
@@ -47,15 +45,7 @@
 			collection.save(function(){
 				console.log(1);
 			});
-		
-			// setTimeout(function(){
-				// collection.all(function(data){
-		// 			// alert(is_exist);
-		// 			console.log('data = '  + data);
-		// 		});
-			// },200);
-			//
-					
+
 			setTimeout(function(){
 				var obj = {
 					uname:"uname"
@@ -74,7 +64,6 @@
   		expect(1);
 
   		var collection = new Collection('message_test');
-   	 	collection.use_websql();
 			
 			collection.empty();
 
@@ -110,14 +99,6 @@
 				console.log(1);
 			});
 		
-			// setTimeout(function(){
-				// collection.all(function(data){
-		// 			// alert(is_exist);
-		// 			console.log('data = '  + data);
-		// 		});
-			// },200);
-			//
-					
 			setTimeout(function(){
 				var obj = {
 					uname: "uname",
