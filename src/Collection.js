@@ -94,7 +94,12 @@ Class('LocalStore', storageBase, {
 		this.store = store;
 		
 		// init this.content_arr
-		this.get_array();
+		if(store.get(this.key) == undefined || store.get(this.key) == "" || store.get(this.key) == "[]"){
+			var dummy = new Array();
+			this.store.set(this.key, JSON.stringify(dummy));
+			this.content_arr = [];
+		}
+		
 	},
 	debug:true,
 	log:function(t){
@@ -109,18 +114,12 @@ Class('LocalStore', storageBase, {
 		return !store.enabled;
 	},
 	save_array:function(){
-		// this.get_array();
+		this.get_array();
 		var contents = JSON.stringify(this.content_arr);
 		this.store.set(this.key, contents);
 	},
 	get_array:function(cb){
-		if(store.get(this.key) == undefined || store.get(this.key) == ""){
-			this.store.set(this.key, '[]');
-			this.content_arr = [];
-			return [];
-		}
 		var contents = JSON.parse(store.get(this.key));
-		this.content_arr = contents;
 		return contents;
 	},
 	all:function(cb){
