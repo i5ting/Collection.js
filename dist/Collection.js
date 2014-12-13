@@ -1,4 +1,4 @@
-/*! Collection - v0.1.0 - 2014-12-12
+/*! Collection - v0.1.0 - 2014-12-13
 * https://github.com/i5ting/Collection.js
 * Copyright (c) 2014 alfred sang; Licensed MIT */
 // use https://github.com/marcuswestin/store.js
@@ -73,6 +73,13 @@ Class('StorageBase',{
 	},
 	drop:function(){
 		this.log('暂时未实现');
+	},
+	search:function(){
+		this.log('暂时未实现');
+	},
+	//清空内容，如果是websql就delete所有，如果是localstorage就设置key为空
+	empty:function(){
+		this.log('暂时未实现');
 	}
 });
 
@@ -120,6 +127,9 @@ Class('LocalStore', storageBase, {
 	drop:function(){
 		store.remove(this.key)
 	},
+	empty:function(){
+		this.store.set(this.key, '');
+	},
 	check_if_exist:function(){
     //TODO:
     return true;
@@ -144,6 +154,9 @@ Class('LocalStore', storageBase, {
 	},
 	_add_force:function(obj){
 		this.content_arr.push(obj);
+	},
+	search:function(){
+		this.log('暂时未实现');
 	}
 });
 
@@ -187,20 +200,23 @@ Class('WebSQLStore', storageBase, {
 		db.transaction(function (tx) {	
 			tx.executeSql(sql);
 		},function(){
+			// alert('fail');
 			if(this.debug){
 				alert('exec_sql ' + sql + ' fail');	
-				this.log_sql('exec_sql ' + sql + ' fail');	
+				this.log_sql('fail exec_sql ' + sql + ' ');	
 			}
-			if(succ_cb){
-				succ_cb();
+			
+			if(fail_cb){
+				fail_cb();
 			}
 			
 			return 0;
 		},function(){
 			// alert('succ');
-			if(fail_cb){
-				fail_cb();
+			if(succ_cb){
+				succ_cb();
 			}
+			
 			return 1;
 		});
 	},
@@ -324,6 +340,18 @@ Class('WebSQLStore', storageBase, {
 	},
 	_save_with:function(obj, cb_succ, cb_fail){
 		var _instance = this;
+		
+		var key_arr = [];
+		var val_arr = [];
+		for(var attr in obj){
+			var value = obj[attr];
+			key_arr.push(this.get_string(attr));
+			val_arr.push(this.get_string(value));
+		}
+		
+		var attr_str = key_arr.join(",");
+		var values_str = val_arr.join(",");
+		
 		this._is_record_exist(obj,function(){
 			// cb_exist
 			this.log("该记录已经存在，不需要插入");
@@ -333,8 +361,6 @@ Class('WebSQLStore', storageBase, {
 		},function(){
 			// cb_not_exist
 			this.log("该记录不存在，准备保存");
-			var attr_str = _instance.key_arr.join(",");
-			var values_str = _instance.val_arr.join(",");
 		
 			var sql = "insert into " + _instance.key + " (" + attr_str + ") values(" + values_str + ")";
 			
@@ -388,6 +414,8 @@ Class('WebSQLStore', storageBase, {
 }, 
 {
 	constructor:function(key){
+		this.key = key;
+		
 		if(this.check_if_not_support() == true){
 		  alert('WebSQLStore is not supported by your browser.')
 			return;
@@ -398,7 +426,6 @@ Class('WebSQLStore', storageBase, {
 			_instance._table_exist = is_exist;
 		});
 		
-		this.key = key;
 	},
 	check_if_not_support:function(){
 		//this.log('暂时未实现' + window.openDatabase);
@@ -483,10 +510,16 @@ Class('WebSQLStore', storageBase, {
 			if(is_exist == true){
 				_instance.exec_sql(sql);
 			}
+			_instance._table_exist = false;
 			if(succ_cb)
 				succ_cb();
 		});
 		
+	},
+	empty:function(){
+		this.log('empty table '+this.key+'');
+		var sql = "delete from " + this.key + ";";
+		this.exec_sql(sql);
 	},
 	is_exist:function(cb){
 		this._is_table_exist(function(data){
@@ -496,6 +529,31 @@ Class('WebSQLStore', storageBase, {
 				cb(false);
 			}
 		});
+	},
+	search:function(obj, cb){
+		var _instance = this;
+		 
+		// get table meta info 
+	
+		// verify attr in meta
+	
+		// sql builder
+		var kv_arr = [];
+		for(var attr in obj){
+			var str ="'"+ attr + "'='" + obj[attr]+"'";
+			kv_arr.push(str); 
+		}
+	
+		var where_condition = kv_arr.join(" and ");
+	
+		// search sql
+		var sql = "select * from " + this.key + " where " + where_condition;
+		_instance.exec_sql_with_result(sql, function(data){
+			if(cb)
+				cb(data);
+			// return data;
+		});
+	 
 	}
 });
 
@@ -583,4 +641,6 @@ Class('Collection',{
 		}
 		
 	}
+	
+	
 });
