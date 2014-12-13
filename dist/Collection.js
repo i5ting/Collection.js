@@ -122,7 +122,13 @@ Class('LocalStore', storageBase, {
 		this.store.set(this.key, contents);
 	},
 	get_array:function(cb){
-		var contents = JSON.parse(store.get(this.key));
+		var contents = [];
+		if(store.get(this.key) == undefined || store.get(this.key) == "" || store.get(this.key) == "[]"){
+			this.log("当前key不存在");
+		}else{
+			contents = JSON.parse(store.get(this.key));
+		}
+		// cb(contents);
 		return contents;
 	},
 	all:function(cb){
@@ -163,6 +169,8 @@ Class('LocalStore', storageBase, {
 	},
 	_add_force:function(obj){
 		this.content_arr.push(obj);
+		var contents = JSON.stringify(this.content_arr);
+		this.store.set(this.key, contents);
 	},
 	check_if_exist:function(){
 		//TODO:
