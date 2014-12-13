@@ -197,20 +197,23 @@ Class('WebSQLStore', storageBase, {
 		db.transaction(function (tx) {	
 			tx.executeSql(sql);
 		},function(){
+			// alert('fail');
 			if(this.debug){
 				alert('exec_sql ' + sql + ' fail');	
-				this.log_sql('exec_sql ' + sql + ' fail');	
+				this.log_sql('fail exec_sql ' + sql + ' ');	
 			}
-			if(succ_cb){
-				succ_cb();
+			
+			if(fail_cb){
+				fail_cb();
 			}
 			
 			return 0;
 		},function(){
 			// alert('succ');
-			if(fail_cb){
-				fail_cb();
+			if(succ_cb){
+				succ_cb();
 			}
+			
 			return 1;
 		});
 	},

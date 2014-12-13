@@ -49,10 +49,10 @@
 			});
 		
 			// setTimeout(function(){
-				collection.all(function(data){
-					// alert(is_exist);
-					console.log('data = '  + data);
-				});
+				// collection.all(function(data){
+		// 			// alert(is_exist);
+		// 			console.log('data = '  + data);
+		// 		});
 			// },200);
 			//
 					
@@ -66,7 +66,7 @@
 					start();
 					// collection.drop();
 				});
-			},200);
+			},100);
 			
   });
 	

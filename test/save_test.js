@@ -51,15 +51,17 @@
 			// ok
 			collection.add(obj2);
 	
-			
-			collection.save(function(){
-				 
-				ok(true, "save");
-				start();
-			});
-		
-		
-		
+
+			setTimeout(function(){
+				collection.save(function(){
+					ok(true, "save succ");
+					start();
+					//succ
+				},function(){
+					//fail
+					
+				});
+		},200);
 		
   });
 	  //
