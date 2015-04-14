@@ -3,6 +3,8 @@ MCollection
 
 MCollection is mobile collection: a data access object wrapper for all mobile platform
 
+忙不过来，谁有时间，帮忙继续写
+
 
 ##  data storage solution for all mobile platform
 
